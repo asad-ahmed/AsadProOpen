@@ -26,5 +26,6 @@
 - Error logs table captures local failures for support review.
 
 ## Render deployment
-- `render.yaml` provisions API, web, Redis, and PostgreSQL resources.
-- API deploy step runs Prisma generate/build and migration on startup.
+- `render.yaml` is configured for a free-plan static-site deployment of the web app.
+- `render.full.yaml` provides the full stack (API + PostgreSQL + Redis) when you are ready for paid resources.
+- In full-stack mode, API deploy runs Prisma generate/build and migration on startup.

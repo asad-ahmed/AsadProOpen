@@ -14,7 +14,8 @@ A standalone, mobile-first field service app designed for one-hand operation in 
 - `packages/shared`: shared types + adapter interface.
 - `packages/sync`: sync engine with retries/backoff.
 - `docs/ARCHITECTURE.md`: offline-first sync design.
-- `render.yaml`: Render deploy blueprint.
+- `render.yaml`: free-plan static Render blueprint.
+- `render.full.yaml`: optional full-stack Render blueprint (API + DB + Redis).
 
 ## MVP feature coverage
 ### Mobile + Web technician workflows
@@ -68,19 +69,25 @@ npm run dev:web
 cd apps/mobile && npm install && npm run start
 ```
 
-## Render deployment (one-click blueprint)
+## Render deployment
+
+### Free-plan blueprint (recommended)
+This repo now uses a **free-friendly `render.yaml`** that deploys only the public web app as a static site (no Redis, no paid web service for Next server runtime).
+
 1. Push this repo to GitHub.
 2. In Render, choose **Blueprint** and select repo.
-3. Render reads `render.yaml` and provisions:
-   - API web service
-   - Web frontend service
-   - PostgreSQL database
-   - Redis instance (optional queue/cache support)
-4. Set any additional env vars:
-   - `DATABASE_URL` (auto-linked)
-   - `NEXT_PUBLIC_API_URL`
-   - `SERVICETITAN_*` (future integration)
-5. Deploy all services.
+3. Render reads `render.yaml` and provisions one service:
+   - Static web site: `field-tech-web`
+4. Deploy and open your Render static site URL.
+
+### Full-stack blueprint (optional, higher cost)
+If you want API + DB + Redis, use `render.full.yaml` instead:
+- API web service
+- Web frontend Node service
+- PostgreSQL database
+- Redis instance
+
+To use it, either rename `render.full.yaml` to `render.yaml` before creating a new Blueprint, or copy its contents into `render.yaml`.
 
 ## API endpoints (MVP)
 - `GET /health`
