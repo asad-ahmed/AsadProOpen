@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  address   String
+  jobs      Job[]
+  createdAt DateTime @default(now())
+}
+
+model Job {
+  id             String      @id @default(cuid())
+  customerId     String
+  customer       Customer    @relation(fields: [customerId], references: [id])
+  scheduledStart DateTime
+  scheduledEnd   DateTime
+  status         JobStatus   @default(scheduled)
+  summary        String
+  locationLatLng String
+  notes          JobNote[]
+  photos         JobPhoto[]
+  lineItems      LineItem[]
+  signature      Signature?
+  payment        Payment?
+  updatedAt      DateTime    @updatedAt
+}
+
+model JobNote {
+  id        String   @id @default(cuid())
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id])
+  text      String
+  createdAt DateTime @default(now())
+}
+
+model JobPhoto {
+  id         String   @id @default(cuid())
+  jobId      String
+  job        Job      @relation(fields: [jobId], references: [id])
+  localUri   String
+  uploadedUri String?
+  createdAt  DateTime @default(now())
+}
+
+model LineItem {
+  id        String  @id @default(cuid())
+  jobId     String
+  job       Job     @relation(fields: [jobId], references: [id])
+  name      String
+  qty       Float
+  unitPrice Float
+  taxable   Boolean
+}
+
+model Signature {
+  id       String   @id @default(cuid())
+  jobId    String   @unique
+  job      Job      @relation(fields: [jobId], references: [id])
+  localUri String
+  signedBy String
+  signedAt DateTime
+}
+
+model Payment {
+  id           String        @id @default(cuid())
+  jobId        String        @unique
+  job          Job           @relation(fields: [jobId], references: [id])
+  amount       Float
+  method       PaymentMethod
+  status       PaymentStatus @default(pending)
+  processorRef String?
+}
+
+model SyncQueue {
+  id            String   @id @default(cuid())
+  entityType    String
+  entityId      String
+  operation     String
+  payload       Json
+  retries       Int      @default(0)
+  lastAttemptAt DateTime?
+}
+
+enum JobStatus {
+  scheduled
+  enroute
+  onsite
+  completed
+}
+
+enum PaymentMethod {
+  card
+  cash
+  check
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+}

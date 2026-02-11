@@ -1,0 +1,22 @@
+{
+  "name": "@ftc/mobile",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo lint-mobile"
+  },
+  "dependencies": {
+    "expo": "^51.0.0",
+    "expo-router": "^3.5.14",
+    "expo-sqlite": "~14.0.5",
+    "expo-haptics": "~13.0.1",
+    "react": "18.2.0",
+    "react-native": "0.74.3"
+  },
+  "devDependencies": {
+    "typescript": "~5.3.3",
+    "@types/react": "~18.2.79"
+  }
+}
